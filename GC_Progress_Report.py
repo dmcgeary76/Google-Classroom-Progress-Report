@@ -5,21 +5,14 @@ from oauth2client import file, client, tools
 
 # Import a student_list function so that we can identify course participants
 from get_student_list import get_students
+from get_assignment_list import get_assignments
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/classroom.coursework.students.readonly'
 course_id = '16954164213'
-courseWork_id = '17368122104'
 
-student_master = get_students(course_id)
-
-activity_master = [['Are you interested in a Google Hangouts Tutorial Session?', '17447959824'],
-                   ['Flubaroo and You!', '17418001075'],
-                   ['Importing Data from an Online Source', '17414066482'],
-                   ['Pivot Power!', '17412675728'],
-                   ['Google Sheets Pre-Skills Assessment', '17368122104'],
-                   ['In the space below describe a way that you might be able to use Fusion Table in your classroom.',
-                    '17334714619'], ['Practicing the Basics of Google Sheets', '17334447819']]
+student_key = get_students(course_id)
+assignment_key = get_assignments(course_id)
 
 def get_grades(temp_id, tempWork_id):
     store = file.Storage('token.json')
