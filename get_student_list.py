@@ -31,7 +31,6 @@ def get_students(temp_id):
         student_master[count].append(student['profile']['name']['fullName'])
         count += 1
 
-    print(student_master)
     return student_master
 
 if __name__ == '__main__':
