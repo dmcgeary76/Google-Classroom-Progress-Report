@@ -9,7 +9,7 @@ from get_assignment_list import get_assignments
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/classroom.coursework.students.readonly'
-course_id = '16954164213'
+course_id = courseId
 
 student_key = get_students(course_id)
 assignment_key = get_assignments(course_id)
@@ -17,11 +17,11 @@ assignment_key = get_assignments(course_id)
 
 def get_grades(temp_id, tempwork_id):
     '''
-    get the grade data from each submitted assignment.  The only information of value here is the id value for the 
+    get the grade data from each submitted assignment.  The only information of value here is the id value for the
     student, the link to the student's grade file, and the grade or grade status as a string
-    :param temp_id: 
-    :param tempwork_id: 
-    :return: 
+    :param temp_id:
+    :param tempwork_id:
+    :return:
     '''
     store = file.Storage('token.json')
     creds = store.get()
@@ -53,9 +53,9 @@ def get_progress_list(temp_assignment_key, temp_course_id):
     '''
     The progress_list is meant to pull all grade data into one large list.  This is necessary for the creation of the
     progress report pdf document and the email that is automatically sent out.
-    :param temp_assignment_key: 
-    :param temp_course_id: 
-    :return: 
+    :param temp_assignment_key:
+    :param temp_course_id:
+    :return:
     '''
     temp_progress_list = [[] for i in range(len(temp_assignment_key))]
     count = 0

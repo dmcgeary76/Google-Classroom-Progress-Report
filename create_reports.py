@@ -5,63 +5,63 @@ from oauth2client import file, client, tools
 from get_grade_data import get_progress_list
 from get_assignment_list import get_assignments
 from get_student_list import get_students
+import csv
+from pprint import pprint
 
-course_id = '16954164213'
+course_id = courseId
+
+'''
+There is, no doubt, a much more elegant way to do all of this.  I welcome any feedback.
+'''
+
+# The student roster pull doesn't contain email info so I made a master list of users and emails
+email_key = [[Name, Email],
+            ...,
+            ...]
+
+# Collect a list of assignments, students, and coursework entries
 assignment_key = get_assignments(course_id)
 student_key = get_students(course_id)
-
 progress_list = get_progress_list(assignment_key, course_id)
-print(progress_list[0][0])
 
-# If modifying these scopes, delete the file gs_token.json.
-SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
-spreadsheet_id = '1uS-4WDfkEwrj-BlsbCyWi-JEVhK84A4cJW4qCQAs4Cc'
-sheet_id = 0   # The int id of the sheet containing the template
+# Create a new document for a progress_report csv file
+def write_hdr(message):
+    with open('progress_list.csv', mode='w') as progress_file:
+        progress_writer = csv.writer(progress_file, delimiter=',', quotechar='"',
+                                                quoting=csv.QUOTE_MINIMAL)
 
-def new_pr_sheet(temp_spreadsheet_id, temp_sheet_id):
-    """
-    Make a copy of a progress report template and copy that sheet into a new spreadsheet document.
-    """
-    store = file.Storage('gs_token.json')
-    creds = store.get()
-    if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('credentials2.json', SCOPES)
-        creds = tools.run_flow(flow, store)
-    service = build('sheets', 'v4', http=creds.authorize(Http()))
+        progress_writer.writerow(message)
 
-    spreadsheet = {
-        'destination_spreadsheet_id': '1MNsq1-C0D5vbm-d-D1EmSN35RVTxIbWwJpMN2OD2R7g',
-    }
+# Append to an existing CSV
+def write_entry(message):
+    with open('progress_list.csv', mode='a') as progress_file:
+        progress_writer = csv.writer(progress_file, delimiter=',', quotechar='"',
+                                                quoting=csv.QUOTE_MINIMAL)
 
-    request = service.spreadsheets().sheets().copyTo(spreadsheetId=temp_spreadsheet_id,
-                                                          sheetId=temp_sheet_id, body=spreadsheet)
-    response = request.execute()
-    return response
+        progress_writer.writerow(message)
 
 if __name__ == '__main__':
-    store = file.Storage('gs2_token.json')
-    creds = store.get()
-    if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('credentials2.json', SCOPES)
-        creds = tools.run_flow(flow, store)
-    service = build('sheets', 'v4', http=creds.authorize(Http()))
+    
+    # Write the headers for the progress_file
+    hdr_text = ['first_name', 'email']
 
-    count = 0
+    for assignment in assignment_key:
+        hdr_text.append(assignment[1] + '_link')
+        hdr_text.append(assignment[1] + '_grade')
+
+    write_hdr(hdr_text)
+
+    # append additional rows for student data
     for student in student_key:
-        body_info = {
-            "majorDimension": "ROWS",
-            "range": "D1",
-            "values": [
-                [
-                    "David"
-                ]
-            ]
-        }
-        count += 1
-        print(student)
-        new_pr_sheet(spreadsheet_id, sheet_id)
-        request = service.spreadsheets().values().append(spreadsheetId='1MNsq1-C0D5vbm-d-D1EmSN35RVTxIbWwJpMN2OD2R7g',
-                                                         range='D1',
-                                                         valueInputOption='RAW',
-                                                         insertDataOption='OVERWRITE', body=body_info)
-        response = request.execute()
+        new_row = []
+        new_row.append(student[1].split(' ')[0])
+        for addy in email_key:
+            if student[1] == addy[0]:
+                new_row.append(addy[1])
+        for i in progress_list:                 #this is a messy recursion through the progress_list
+            for j in i:                         #every courseWork item is buried in two nested null lists
+                for k in j:
+                    if student[0] == k[0]:      #if the studentId matches, then add content for the courseWork
+                        new_row.append(k[1])
+                        new_row.append(k[2])
+        write_entry(new_row)                    #append the new record listing to the CSV
