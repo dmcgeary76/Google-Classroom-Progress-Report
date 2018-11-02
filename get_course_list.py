@@ -1,3 +1,9 @@
+'''
+On the off chance that someone has multiple courses that they would like to process a CSV for, I have included a short
+function that will return a course list with the name and id of each course.  This can be used to create a master script
+would roll through all of the available courses and create new csvs for each one.
+'''
+
 from __future__ import print_function
 from googleapiclient.discovery import build
 from httplib2 import Http
@@ -23,8 +29,6 @@ def get_course_list():
     results = service.courses().list().execute()
     course_list = results.get('courses', [])
 
-    for course in course_list:
-        print(course)
     return course_list
 
 if __name__ == '__main__':
