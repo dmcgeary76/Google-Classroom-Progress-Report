@@ -11,29 +11,17 @@ from pprint import pprint
 
 offset = 0
 course_id = '24471685026'
-email_key = [['Andrew Simmons', 'asimmons@wallerisd.net'],
-             ['Ashauna Lindo', 'ashaunalindo@gmail.com'],
-             ['Brenda Arteaga', 'barteaga@hcde-texas.org'],
-             ['Candice Arthur', 'carthur@pasadenaisd.org'],
-             ['Cindy Garcia', 'cgarcia@pasadenaisd.org'],
-             ['Janet Nuzzie', 'jnuzzie@pasadenaisd.org'],
-             ['John Fletcher', 'jfletcher@wallerisd.net'],
-             ['Kathryn Palmer', 'kpalmer@humbleisd.net'],
-             ['Kristi Archer', 'klarcher@katyisd.org'],
-             ['Rebecca Terry', 'rterry@pasadenaisd.org'],
-             ['Traci Powell', 'tpowell@pasadenaisd.org'],
-             ['Vickie Cooper', 'vcooper@msn.com'],
-             ['Wynette Fobbs', 'wfobbs@kleinisd.net'],
-             ['Teacher21 Teacher21', 'dmcgeary@hcde-texas.org'],
-             ['Kasey Davis', 'kasey.davis@humbleisd.net'],
-             ['Guy James', 'guydjames@katyisd.org'],
-             ['Debbie Hall', 'debhall945@gmail.com']]
+
+# Create an email key list with name and email address identifiers
+email_key = [['John Doe', 'john.doe@someisd.org'],
+             ['Jane Doe', 'jane.doe@someisd.org']]
 
 assignment_key = get_assignments(course_id)
 student_key = get_students(course_id)
 progress_list = get_progress_list(course_id)
 course_list = get_courses()
 
+#write the headers for the CSV output
 def write_hdr(message):
     with open('progress_list.csv', mode='w') as progress_file:
         progress_writer = csv.writer(progress_file, delimiter=',', quotechar='"',
@@ -41,7 +29,7 @@ def write_hdr(message):
 
         progress_writer.writerow(message)
 
-
+# Write a new line to the CSV output
 def write_entry(message):
     with open('progress_list.csv', mode='a') as progress_file:
         progress_writer = csv.writer(progress_file, delimiter=',', quotechar='"',
@@ -55,6 +43,8 @@ hdr_text = ['first_name', 'email']
 
 title_list = []
 count = 0
+
+# Get the name of each assignment and add it to the hdr_text string to write to CSV
 for assignment in assignment_key:
     if 'Optional' in assignment[1]:
         offset += 1
@@ -67,6 +57,7 @@ hdr_text.append('Status')
 hdr_text.append('CourseTitle')
 hdr_text.extend(title_list)
 
+# Write the first line of headers to the CSV output.
 write_hdr(hdr_text)
 
 # append additional rows for student data
@@ -87,6 +78,7 @@ for student in student_key:
     for entry in new_row:
         if isinstance(entry, int):
             count += 1
+    # Change the string value for the status of each assignment based on the presence of a numerical grade.
     if count >= target_total:
         new_row.append('You have completed this course.  You will receive your completion certificate later today.')
     else:
