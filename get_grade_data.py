@@ -9,10 +9,7 @@ from get_assignment_list import get_assignments
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/classroom.coursework.students.readonly'
-course_id = courseId
-
-student_key = get_students(course_id)
-assignment_key = get_assignments(course_id)
+course_id = '20106357846'
 
 
 def get_grades(temp_id, tempwork_id):
@@ -23,6 +20,7 @@ def get_grades(temp_id, tempwork_id):
     :param tempwork_id:
     :return:
     '''
+    student_key = get_students(temp_id)
     store = file.Storage('token.json')
     creds = store.get()
     if not creds or creds.invalid:
@@ -49,20 +47,21 @@ def get_grades(temp_id, tempwork_id):
     return submission_master
 
 
-def get_progress_list(temp_assignment_key, temp_course_id):
+def get_progress_list(temp_id):
     '''
     The progress_list is meant to pull all grade data into one large list.  This is necessary for the creation of the
     progress report pdf document and the email that is automatically sent out.
     :param temp_assignment_key:
-    :param temp_course_id:
+    :param temp_id:
     :return:
     '''
-    temp_progress_list = [[] for i in range(len(temp_assignment_key))]
+    assignment_key = get_assignments(temp_id)
+    progress_list = [[] for i in range(len(assignment_key))]
     count = 0
     for assignment in assignment_key:
-        temp_progress_list[count].append(get_grades(temp_course_id, assignment[0]))
+        progress_list[count].append(get_grades(temp_id, assignment[0]))
         count += 1
-    return temp_progress_list
+    return progress_list
 
 if __name__ == '__main__':
-    get_progress_list(assignment_key, course_id)
+    get_progress_list(course_id)
