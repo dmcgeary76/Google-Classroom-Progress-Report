@@ -5,7 +5,7 @@ from oauth2client import file, client, tools
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/classroom.rosters.readonly'
-course_id = courseId
+course_id = '20106357846'
 
 def get_students(temp_id):
     '''
