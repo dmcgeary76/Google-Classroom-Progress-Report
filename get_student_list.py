@@ -5,7 +5,7 @@ from oauth2client import file, client, tools
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/classroom.rosters.readonly'
-course_id = courseId
+course_id = 'your_course_id'
 
 def get_students(temp_id):
     '''
@@ -26,6 +26,9 @@ def get_students(temp_id):
     student_master = [[] for i in range(len(student_list))]
 
     count = 0
+    '''
+    We are only interested in the id and fullName of each user, so we'll isolate that information in a list of lists.
+    '''
     for student in student_list:
         student_master[count].append(student['userId'])
         student_master[count].append(student['profile']['name']['fullName'])
@@ -34,4 +37,4 @@ def get_students(temp_id):
     return student_master
 
 if __name__ == '__main__':
-    get_students(course_id)
+    print(get_students(course_id))
