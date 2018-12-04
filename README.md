@@ -4,3 +4,14 @@ Python script to pull a user's name, assignment grades, and course progress stat
 # What you will need
 python 3+
 Google API Account with credentials
+MySQL database with the following tables created
+
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| id       | int(20)     | NO   | PRI | NULL    | auto_increment |
+| assignid | varchar(50) | YES  |     | NULL    |                |
+| name     | varchar(50) | YES  |     | NULL    |                |
+| courseid | varchar(50) | YES  |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+
