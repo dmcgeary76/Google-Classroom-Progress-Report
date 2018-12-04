@@ -5,7 +5,7 @@ from oauth2client import file, client, tools
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/classroom.coursework.students.readonly'
-course_id = '19773617757'
+course_id = '20106357846'
 
 def get_assignments(temp_id):
     '''
@@ -23,10 +23,9 @@ def get_assignments(temp_id):
     results = service.courses().courseWork().list(courseId=temp_id).execute()
     activity_list = results.get('courseWork', [])
 
-    # separate out the assignments into one separate list.  This could be done more efficiently in spacing, but oh well.
     activity_master = [[] for i in range(len(activity_list))]
 
-    # need to create a new list that pulls id and title values out to simplify the reporting process
+    #return an activity list with id and title to simplify table references
     count = 0
     for activity in activity_list:
         activity_master[count].append(activity['id'])
@@ -35,5 +34,6 @@ def get_assignments(temp_id):
 
     return activity_master
 
+# Useful as a one-off to get a list of courses.
 if __name__ == '__main__':
-    get_assignments(course_id)
+    print(get_assignments(course_id))
